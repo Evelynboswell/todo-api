@@ -30,10 +30,10 @@ This is a simple Todo REST API built with Laravel 10, featuring multi-user manag
 
 ## Installation
 Follow the steps below to set up the project locally.
-#### 1. Clone the Repository
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/laravel-todo-api.git
+git clone https://github.com/Evelynboswell/laravel-todo-api.git
 cd laravel-todo-api
 ```
 ### 2. Install Dependencies
