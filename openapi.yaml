@@ -1,0 +1,322 @@
+openapi: 3.0.0
+info:
+  title: Todo API with Multi-User Management
+  description: A simple Todo REST API with multi-user management built with Laravel 10.
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8000/api
+    description: Local Laravel Development Server
+
+paths:
+  /register:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  example: john@example.com
+                password:
+                  type: string
+                  example: password
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User successfully registered
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      email:
+                        type: string
+        '400':
+          description: Bad Request
+
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: Login a user and return an authentication token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: john@example.com
+                password:
+                  type: string
+                  example: password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successful
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '401':
+          description: Invalid login details
+
+  /logout:
+    post:
+      tags:
+        - Auth
+      summary: Logout the authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logged out successfully
+        '401':
+          description: Unauthorized
+
+  /tasks:
+    get:
+      tags:
+        - Tasks
+      summary: Retrieve all tasks of the authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    is_completed:
+                      type: boolean
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+        '401':
+          description: Unauthorized
+
+    post:
+      tags:
+        - Tasks
+      summary: Create a new task
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Buy Groceries
+                description:
+                  type: string
+                  example: Milk, Eggs, Bread, and Butter
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  is_completed:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+
+  /tasks/{id}:
+    get:
+      tags:
+        - Tasks
+      summary: Retrieve a specific task by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the task to retrieve
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  is_completed:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+        '404':
+          description: Task not found
+        '401':
+          description: Unauthorized
+
+    put:
+      tags:
+        - Tasks
+      summary: Update a specific task by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the task to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Buy Vegetables
+                description:
+                  type: string
+                  example: Tomatoes, Onions, Potatoes
+                is_completed:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  is_completed:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+        '404':
+          description: Task not found
+        '401':
+          description: Unauthorized
+
+    delete:
+      tags:
+        - Tasks
+      summary: Delete a specific task by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the task to delete
+      responses:
+        '200':
+          description: Task deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Task deleted successfully
+        '404':
+          description: Task not found
+        '401':
+          description: Unauthorized
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
