@@ -33,8 +33,8 @@ Follow the steps below to set up the project locally.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Evelynboswell/laravel-todo-api.git
-cd laravel-todo-api
+git clone https://github.com/Evelynboswell/todo-api.git
+cd todo-api
 ```
 ### 2. Install Dependencies
 Run the following command to install PHP and Composer dependencies:
